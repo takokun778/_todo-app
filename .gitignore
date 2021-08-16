@@ -1,0 +1,5 @@
+docker/golang-dev
+docker/prisma
+client/typescript_test/node_modules
+googleapis
+protobuf

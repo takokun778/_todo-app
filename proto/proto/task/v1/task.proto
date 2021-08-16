@@ -1,0 +1,128 @@
+syntax = "proto3";
+
+package task.v1;
+
+import "google/protobuf/timestamp.proto";
+
+// gitmodulesに対応するためにパスを修正
+import "proto/google/api/annotations.proto";
+
+option go_package = "./golang/task";
+
+message Task {
+    string id = 1;
+    string creator_id = 2;
+    string title = 3;
+    string detail = 4;
+    Status status = 5;
+    google.protobuf.Timestamp created_at = 6;
+    google.protobuf.Timestamp updated_at = 7;
+    google.protobuf.Timestamp deadline = 8;
+
+    enum Status {
+        INCOMPLETE = 0;
+        COMPLETE = 1;
+    }
+}
+
+service TaskService {
+    rpc Create (CreateRequest) returns (CreateResponse) {
+        option (google.api.http) = {
+            post: "/task"
+            body: "*"
+        };
+    }
+    rpc Get (GetRequest) returns (GetResponse) {
+        option (google.api.http) = {
+            get: "/task/{id}"
+        };
+    }
+    rpc List (ListRequest) returns (ListResponse) {
+        option (google.api.http) = {
+            get: "/tasks/{user_id}"
+        };
+    }
+    rpc Update (UpdateRequest) returns (UpdateResponse) {
+        option (google.api.http) = {
+            put: "/task/{id}"
+            body: "*"
+        };
+    }
+    rpc Done (DoneRequest) returns (DoneResponse) {
+        option (google.api.http) = {
+            put: "/task/{id}/done"
+        };
+    }
+    rpc Undone (UndoneRequest) returns (UndoneResponse) {
+        option (google.api.http) = {
+            put: "/task/{id}/undone"
+        };
+    }
+    rpc Delete (DeleteRequest) returns (DeleteResponse) {
+        option (google.api.http) = {
+            delete: "/task/{id}"
+        };
+    }
+}
+
+message CreateRequest {
+    string creator_id = 1;
+    string title = 2;
+    string detail = 3;
+    google.protobuf.Timestamp deadline = 4;
+}
+
+message CreateResponse {
+    Task task = 1;
+}
+
+message GetRequest {
+    string id = 1;
+}
+
+message GetResponse {
+    Task task = 1;
+}
+
+message ListRequest {
+    string user_id = 1;
+}
+
+message ListResponse {
+    repeated Task task = 1;
+}
+
+message UpdateRequest {
+    string id = 1;
+    string title = 2;
+    string detail = 3;
+    google.protobuf.Timestamp deadline = 4;
+}
+
+message UpdateResponse {
+    Task task = 1;
+}
+
+message DoneRequest {
+    string id = 1;
+}
+
+message DoneResponse {
+    Task task = 1;
+}
+
+message UndoneRequest {
+    string id = 1;
+}
+
+message UndoneResponse {
+    Task task = 1;
+}
+
+message DeleteRequest {
+    string id = 1;
+}
+
+message DeleteResponse {
+    Task task = 1;
+}

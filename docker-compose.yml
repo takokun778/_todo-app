@@ -1,0 +1,83 @@
+version: '3.8'
+
+services:
+    db:
+        container_name: ${UNAME}_db
+        image: postgres:13.3-alpine
+        ports:
+            - ${DB_PORT}:5432
+        environment:
+            # TZ: "Asia/Tokyo"
+            TZ: "UTC"
+            LANG: ja_JP.UTF-8
+            POSTGRES_DB: ${DB_NAME}
+            POSTGRES_USER: ${DB_USER}
+            POSTGRES_PASSWORD: ${DB_PASS}
+            POSTGRES_INITDB_ARGS: "--encoding=UTF-8"
+            POSTGRES_HOST_AUTH_METHOD: trust
+    db_dev:
+        container_name: ${UNAME}_db_dev
+        build:
+            context: ./docker/db-dev
+            args: 
+                - UID=${UID}
+                - GID=${GID}
+                - UNAME=${UNAME}
+                - VERSION=${MIGRATE_VERSION}
+        tty: true
+        volumes: 
+            - ./migration:/home/${UNAME}/migration/
+        links:
+            - db
+            - db:${DB_HOST}
+        environment:
+            DB_NAME: ${DB_NAME}
+            DB_USER: ${DB_USER}
+            DB_PASS: ${DB_PASS}
+            DB_HOST: ${DB_HOST}
+            DB_PORT: ${DB_PORT}
+            POSTGRESQL_URL: postgres://${DB_USER}:${DB_PASS}@${DB_HOST}:${DB_PORT}/${DB_NAME}?sslmode=disable
+    # golang_dev:
+    #     container_name: ${UNAME}_golang_dev
+    #     build:
+    #         context: ./docker/golang-dev
+    #         args: 
+    #             - UID=${UID}
+    #             - GID=${GID}
+    #             - UNAME=${UNAME}
+    #     tty: true
+    #     volumes: 
+    #         - ./golang:/home/${UNAME}/src/
+    #     links:
+    #         - db
+    #         - db:${DB_HOST}
+    #     environment:
+    #         DB_NAME: ${DB_NAME}
+    #         DB_USER: ${DB_USER}
+    #         DB_PASS: ${DB_PASS}
+    #         DB_HOST: ${DB_HOST}
+    #         DB_PORT: ${DB_PORT}
+    #         LISTEN_PORT: ${LISTEN_PORT}
+    # prisma:
+    #     container_name: ${UNAME}_prisma
+    #     build:
+    #         context: ./docker/prisma
+    #         args: 
+    #             - UID=${UID}
+    #             - GID=${GID}
+    #             - UNAME=${UNAME}
+    #     tty: true
+    #     ports:
+    #         - ${PRISMA_CLIENT_PORT}:5555
+    #     volumes:
+    #         - ./prisma/schema:/home/${UNAME}/prisma
+    #     links:
+    #         - db
+    #         - db:${DB_HOST}
+    #     environment:
+    #         DB_HOST: ${DB_HOST}
+    #         DB_NAME: ${DB_NAME}
+    #         DB_USER: ${DB_USER}
+    #         DB_PASS: ${DB_PASS}
+    #         DB_PORT: ${DB_PORT}
+    #         DATABASE_URL: postgresql://${DB_USER}:${DB_PASS}@${DB_HOST}:${DB_PORT}/${DB_NAME}

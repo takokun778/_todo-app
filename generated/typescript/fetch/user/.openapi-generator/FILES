@@ -1,0 +1,16 @@
+.openapi-generator-ignore
+apis/UserServiceApi.ts
+apis/index.ts
+index.ts
+models/InlineObject.ts
+models/ProtobufAny.ts
+models/RpcStatus.ts
+models/TypeDate.ts
+models/V1GetResponse.ts
+models/V1RegisterRequest.ts
+models/V1RegisterResponse.ts
+models/V1TerminateResponse.ts
+models/V1UpdateResponse.ts
+models/V1User.ts
+models/index.ts
+runtime.ts

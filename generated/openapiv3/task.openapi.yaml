@@ -1,0 +1,291 @@
+openapi: 3.0.1
+info:
+  title: proto/proto/task/v1/task.proto
+  version: version not set
+servers:
+- url: /
+tags:
+- name: TaskService
+paths:
+  /task:
+    post:
+      tags:
+      - TaskService
+      operationId: TaskService_Create
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/v1CreateRequest'
+        required: true
+      responses:
+        200:
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/v1CreateResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/googlerpcStatus'
+      x-codegen-request-body-name: body
+  /task/{id}:
+    get:
+      tags:
+      - TaskService
+      operationId: TaskService_Get
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/v1GetResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/googlerpcStatus'
+    put:
+      tags:
+      - TaskService
+      operationId: TaskService_Update
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                detail:
+                  type: string
+                deadline:
+                  type: string
+                  format: date-time
+        required: true
+      responses:
+        200:
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/v1UpdateResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/googlerpcStatus'
+      x-codegen-request-body-name: body
+    delete:
+      tags:
+      - TaskService
+      operationId: TaskService_Delete
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/v1DeleteResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/googlerpcStatus'
+  /task/{id}/done:
+    put:
+      tags:
+      - TaskService
+      operationId: TaskService_Done
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/v1DoneResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/googlerpcStatus'
+  /task/{id}/undone:
+    put:
+      tags:
+      - TaskService
+      operationId: TaskService_Undone
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/v1UndoneResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/googlerpcStatus'
+  /tasks/{userId}:
+    get:
+      tags:
+      - TaskService
+      operationId: TaskService_List
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/v1ListResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/googlerpcStatus'
+components:
+  schemas:
+    googlerpcStatus:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/protobufAny'
+    protobufAny:
+      type: object
+      properties:
+        typeUrl:
+          type: string
+        value:
+          pattern: ^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$
+          type: string
+          format: byte
+    v1CreateRequest:
+      type: object
+      properties:
+        creatorId:
+          type: string
+        title:
+          type: string
+        detail:
+          type: string
+        deadline:
+          type: string
+          format: date-time
+    v1CreateResponse:
+      type: object
+      properties:
+        task:
+          $ref: '#/components/schemas/v1Task'
+    v1DeleteResponse:
+      type: object
+      properties:
+        task:
+          $ref: '#/components/schemas/v1Task'
+    v1DoneResponse:
+      type: object
+      properties:
+        task:
+          $ref: '#/components/schemas/v1Task'
+    v1GetResponse:
+      type: object
+      properties:
+        task:
+          $ref: '#/components/schemas/v1Task'
+    v1ListResponse:
+      type: object
+      properties:
+        task:
+          type: array
+          items:
+            $ref: '#/components/schemas/v1Task'
+    v1Task:
+      type: object
+      properties:
+        id:
+          type: string
+        creatorId:
+          type: string
+        title:
+          type: string
+        detail:
+          type: string
+        status:
+          $ref: '#/components/schemas/v1TaskStatus'
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        deadline:
+          type: string
+          format: date-time
+    v1TaskStatus:
+      type: string
+      default: INCOMPLETE
+      enum:
+      - INCOMPLETE
+      - COMPLETE
+    v1UndoneResponse:
+      type: object
+      properties:
+        task:
+          $ref: '#/components/schemas/v1Task'
+    v1UpdateResponse:
+      type: object
+      properties:
+        task:
+          $ref: '#/components/schemas/v1Task'

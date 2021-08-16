@@ -1,0 +1,80 @@
+syntax = "proto3";
+
+package user.v1;
+
+import "proto/googleapis/google/type/date.proto";
+
+// gitmodulesに対応するためにパスを修正
+import "proto/google/api/annotations.proto";
+
+option go_package = "./golang/user";
+
+message User {
+    string id = 1;
+    string first_name = 2;
+    string last_name = 3;
+    google.type.Date birthday = 4;
+    int64 age = 5;
+}
+
+service UserService {
+    rpc Register (RegisterRequest) returns (RegisterResponse) {
+        option (google.api.http) = {
+            post: "/user/register"
+            body: "*"
+        };
+    }
+    rpc Get (GetRequest) returns (GetResponse) {
+        option (google.api.http) = {
+            get: "/user/{id}"
+        };
+    }
+    rpc Update (UpdateRequest) returns (UpdateResponse) {
+        option (google.api.http) = {
+            put: "/user/{id}"
+            body: "*"
+        };
+    }
+    rpc Terminate (TerminateRequest) returns (TerminateResponse) {
+        option (google.api.http) = {
+            delete: "/user/{id}"
+        };
+    }
+}
+
+message RegisterRequest {
+    string first_name = 1;
+    string last_name = 2;
+    google.type.Date birthday = 3;
+}
+
+message RegisterResponse {
+    User user = 1;
+}
+
+message GetRequest {
+    string id = 1;
+}
+
+message GetResponse {
+    User user = 1;
+}
+
+message UpdateRequest {
+    string id = 1;
+    string first_name = 2;
+    string last_name = 3;
+    google.type.Date birthday = 4;
+}
+
+message UpdateResponse {
+    User user = 1;
+}
+
+message TerminateRequest {
+    string id = 1;
+}
+
+message TerminateResponse {
+    User user = 1;
+}
